@@ -14,3 +14,7 @@
 
 1. Display all materials (_10,000+_) in XML using WPF Gui.
 2. Allow user to search _materials_ by **name**
+
+#### ScreenShot
+
+![ScreenShot](https://raw2.github.com/rohitkandhal/XML-parser-wpf/master/gui1.png)
