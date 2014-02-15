@@ -6,6 +6,8 @@ using System.Windows.Input;
 using Test1.Helper;
 using Test1.Model;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Xml.Linq;
 
 namespace Test1.ViewModel
 {
@@ -15,6 +17,9 @@ namespace Test1.ViewModel
 
         private string xmlPath;
 
+        /// <summary>
+        /// Source path of XML file
+        /// </summary>
         public string XMLPath
         {
             get
@@ -30,6 +35,9 @@ namespace Test1.ViewModel
 
         private string errorMessage;
 
+        /// <summary>
+        /// Application top Error message.
+        /// </summary>
         public string ErrorMessage
         {
             get
@@ -79,6 +87,9 @@ namespace Test1.ViewModel
 
         private ObservableCollection<Material> materialSearchResults;
 
+        /// <summary>
+        /// Collection of all materials in XML. Populated from given XML file
+        /// </summary>
         public ObservableCollection<Material> MaterialSearchResults
         {
             get
@@ -97,6 +108,7 @@ namespace Test1.ViewModel
 
         }
 
+        // Lock object to prevent concurrency issue
         private object lockObject = new object();
 
         #endregion
@@ -105,6 +117,9 @@ namespace Test1.ViewModel
 
         private ICommand xmlProcessCommand;
 
+        /// <summary>
+        /// Relay Command to process a XML file, load materials in application
+        /// </summary>
         public ICommand XMLProcessCommand
         {
             get
@@ -119,6 +134,9 @@ namespace Test1.ViewModel
 
         private ICommand searchCommand;
 
+        /// <summary>
+        /// Relay Command to search a given material name in Material collection
+        /// </summary>
         public ICommand SearchCommand
         {
             get
@@ -137,54 +155,58 @@ namespace Test1.ViewModel
 
         public MaterialViewModel()
         {
-            this.ErrorMessage = string.Empty;
         }
 
         #endregion
+
         #region Actions
 
         /// <summary>
-        /// Delegate to Process XML
+        /// Delegate to Process XML, and load all materials in collection
         /// </summary>
-        /// <param name="param"></param>
+        /// <param name="param">XML File source path</param>
         public void ProcessXML(object param)
         {
             string fileName = param as string;
 
-            // Validate File Path
-            if (fileName == null || !System.IO.File.Exists((string)fileName))
-            {
-                this.ErrorMessage = "Error: File does not exist or invalid file";
-                return;
-            }
-            else
-            {
-                this.ErrorMessage = string.Empty;
-            }
+            // Clear Error Message in case we are processing different XML files on same instance
+            this.ErrorMessage = string.Empty;
 
             lock (lockObject)
             {
-                // Read XML using Linq
-                var doc = XMLParser.GetXMLDataFromFileName(fileName);
-
-                // Using Hard Coded path. Can also use Descendants
-                var materials = (from material in doc.Element("acousticmaterial").Element("mtllib").Elements("material")
-                                 select new
-                                 {
-                                     Name = (string)material.Attribute("name"),
-                                     Absorption = (string)material.Attribute("absorption"),
-                                     Scattering = (string)material.Attribute("scattering")
-                                 });
-
-                // Populate all material to collection
-                this.MaterialListCollection.IsUpdatePaused = true;
-
-                foreach (var material in materials)
+                XDocument xmlDoc = null;
+                try
                 {
-                    this.MaterialListCollection.Add(new Material { Name = material.Name, Absorption = material.Absorption, Scattering = material.Scattering });
+                    // Read XML using Linq
+                    xmlDoc = XMLParser.GetXMLDataFromFileName(fileName);
+                }
+                catch (FileNotFoundException ex)
+                {
+                    this.ErrorMessage = ex.Message;
                 }
 
-                this.MaterialListCollection.IsUpdatePaused = false;
+                if (xmlDoc != null)
+                {
+                    // Fetch Data from XML using Linq - Hard coded element names. Can also use Descendants
+                    var materials = (from material in xmlDoc.Element("acousticmaterial").Element("mtllib").Elements("material")
+                                     select new
+                                     {
+                                         Name = (string)material.Attribute("name"),
+                                         Absorption = (string)material.Attribute("absorption"),
+                                         Scattering = (string)material.Attribute("scattering")
+                                     });
+
+
+                    this.MaterialListCollection.IsUpdatePaused = true;
+
+                    // Add all material to collection
+                    foreach (var material in materials)
+                    {
+                        this.MaterialListCollection.Add(new Material { Name = material.Name, Absorption = material.Absorption, Scattering = material.Scattering });
+                    }
+
+                    this.MaterialListCollection.IsUpdatePaused = false;
+                }
             }
         }
 

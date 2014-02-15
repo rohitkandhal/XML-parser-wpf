@@ -21,6 +21,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
+        <!-- Step 1 -->
         <Label Content="{Binding ErrorMessage}" Name="ErrorLabel" HorizontalAlignment="Center" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="3" Foreground="Red"  />
         <Label Content="Step 1: Enter XML file path (with filename)" Name="Instruction1" Grid.Row="1" Grid.ColumnSpan="3" Foreground="#FF0027FF"  />
         <Label Content="Path:" Name="PathLabel" Grid.Row="2" Grid.Column="0" Width="auto"/>
@@ -28,6 +29,7 @@
         <Button Grid.Row="2" Grid.Column="3" Content="Process XML" Margin="5,0,10,0" Command="{Binding Path=XMLProcessCommand}" CommandParameter="{Binding XMLPath}"/>
         <TextBox Grid.Row="3" Grid.ColumnSpan="3" Text="C:\Users\Rohit\Documents\Visual Studio 2010\Projects\XML-parser-wpf\XML-Parser-wpf\cube.material.xml" ToolTip="Default Path" Name="DefaultPath" HorizontalAlignment="Center" Margin="5,10,5,0" Width="auto" />
 
+        <!-- Result Grid -->
         <Label Content="Result:" Grid.Row="4" Grid.Column="0" Width="auto" Foreground="#FF0027FF"/>
         <ListView x:Name="MaterialListView" Grid.Row="5" Grid.ColumnSpan="3" ItemsSource="{Binding MaterialListCollection}" Margin="5,5,5,5" HorizontalAlignment="Center">
             <ListView.View>
@@ -39,6 +41,7 @@
             </ListView.View>
         </ListView>
 
+        <!-- Step 2 Search results-->
         <Label Content="Step 2: Search Material by Name (Case Sensitive, Partial search - e.g. Plaster allowed)" Name="Step2" Grid.Row="6" Grid.ColumnSpan="3" Foreground="#FF0027FF"  />
 
         <Label Grid.Row="7" Grid.Column="0" Content="Material Name:" Width="auto"/>

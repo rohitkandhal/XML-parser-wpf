@@ -6,6 +6,9 @@ using System.Windows.Input;
 
 namespace Test1.ViewModel
 {
+    /// <summary>
+    /// Custom relay command implementation
+    /// </summary>
     class RelayCommand : ICommand
     {
         private readonly Action<object> _action;
