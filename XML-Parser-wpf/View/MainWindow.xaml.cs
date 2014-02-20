@@ -23,6 +23,7 @@ namespace Test1.View
         {
             InitializeComponent();
 
+            // Intentionally left empty
         }
     }
 }

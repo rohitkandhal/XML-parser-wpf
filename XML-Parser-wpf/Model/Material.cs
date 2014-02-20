@@ -12,6 +12,9 @@ namespace Test1.Model
 
         private string name;
 
+        /// <summary>
+        /// Material Name
+        /// </summary>
         public string Name
         {
             get
@@ -27,6 +30,9 @@ namespace Test1.Model
 
         private string absorption;
 
+        /// <summary>
+        /// Material Absorption rate
+        /// </summary>
         public string Absorption
         {
             get
@@ -42,6 +48,9 @@ namespace Test1.Model
 
         private string scattering;
 
+        /// <summary>
+        /// Material Scattering rate
+        /// </summary>
         public string Scattering
         {
             get
@@ -75,6 +84,7 @@ namespace Test1.Model
             var handler = PropertyChanged;
             if (handler != null)
             {
+                // Notify UI about the property change
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }

@@ -113,7 +113,7 @@ namespace Test1.ViewModel
 
         #endregion
 
-        #region Command
+        #region Commands
 
         private ICommand xmlProcessCommand;
 
@@ -202,7 +202,14 @@ namespace Test1.ViewModel
                     // Add all material to collection
                     foreach (var material in materials)
                     {
-                        this.MaterialListCollection.Add(new Material { Name = material.Name, Absorption = material.Absorption, Scattering = material.Scattering });
+                        this.MaterialListCollection.Add(
+                            new Material
+                            {
+                                Name = material.Name,
+                                Absorption = material.Absorption,
+                                Scattering = material.Scattering
+                            }
+                                );
                     }
 
                     this.MaterialListCollection.IsUpdatePaused = false;
@@ -222,7 +229,10 @@ namespace Test1.ViewModel
 
             this.MaterialSearchResults.Clear();
 
-            this.MaterialSearchResults = new ObservableCollection<Material>(this.MaterialListCollection.Where(x => x.Name.Contains(searchQuery)));
+            this.MaterialSearchResults = new ObservableCollection<Material>(
+                this.MaterialListCollection.Where(
+                    x => x.Name.Contains(searchQuery)
+                                                ));
 
         }
         #endregion

@@ -61,7 +61,7 @@ namespace Test1.Helper
 
         #endregion
 
-        #region IOvervableCollection Overridden Methods
+        #region IOvervableCollection Methods
 
         /// <summary>
         /// Overridden OnCollectionChanged behavior to allow disabling collection change event.
